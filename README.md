@@ -11,6 +11,7 @@ var builder = new WorkflowBuilder()
 
 因此需要一个WorkflowBuilder来接收不同阶段的自定义逻辑，同时自定义的都要实现IWorkflowStep接口的ExecuteAsync，并且把自定义逻辑都放ExecuteAsync里面。
 
+
 # 二、具体实现
 ## 1. IWorkflowStep接口
 ```
@@ -78,6 +79,12 @@ public class ThenWorkflow : IWorkflowStep
     }
 }
 ```
+WorkflowBuilder 类有一个名为 Start<T>() 的方法，该方法使用了泛型类型参数 T，该类型必须实现 IWorkflowStep 接口。该方法会创建一个中间件，并将其添加到 IApplicationBuilder 实例中，以在 ASP.NET Core 管道的执行过程中使用。
+
+在中间件的实现中，通过 Activator.CreateInstance 方法创建了泛型类型参数 T 的实例，并调用其 ExecuteAsync 方法来执行工作流程步骤。然后，通过调用 next() 方法，将控制权传递给下一个中间件。
+
+该方法最后返回一个当前对象实例，以支持链式调用模式。
+
 ## 4. 写一个扩展类，以便可以把WorkflowBuiler的方法在startup里面使用
 ```
 public static class WorkflowMiddlewareExtensions
