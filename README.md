@@ -61,6 +61,12 @@ public class WorkflowBuilder
     }
 }
 ```
+WorkflowBuilder 类有一个名为 Start<T>() 的方法，该方法使用了泛型类型参数 T，该类型必须实现 IWorkflowStep 接口。该方法会创建一个中间件，并将其添加到 IApplicationBuilder 实例中，以在 ASP.NET Core 管道的执行过程中使用。
+
+在中间件的实现中，通过 Activator.CreateInstance 方法创建了泛型类型参数 T 的实例，并调用其 ExecuteAsync 方法来执行工作流程步骤。然后，通过调用 next() 方法，将控制权传递给下一个中间件。
+
+该方法最后返回一个当前对象实例，以支持链式调用模式。
+
 ## 3. 自定义start、then类实现IWorkflowStep接口
 ```
 public class StartWorkflow : IWorkflowStep
@@ -79,11 +85,6 @@ public class ThenWorkflow : IWorkflowStep
     }
 }
 ```
-WorkflowBuilder 类有一个名为 Start<T>() 的方法，该方法使用了泛型类型参数 T，该类型必须实现 IWorkflowStep 接口。该方法会创建一个中间件，并将其添加到 IApplicationBuilder 实例中，以在 ASP.NET Core 管道的执行过程中使用。
-
-在中间件的实现中，通过 Activator.CreateInstance 方法创建了泛型类型参数 T 的实例，并调用其 ExecuteAsync 方法来执行工作流程步骤。然后，通过调用 next() 方法，将控制权传递给下一个中间件。
-
-该方法最后返回一个当前对象实例，以支持链式调用模式。
 
 ## 4. 写一个扩展类，以便可以把WorkflowBuiler的方法在startup里面使用
 ```
