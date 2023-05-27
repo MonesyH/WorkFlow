@@ -1,6 +1,6 @@
 namespace WorkFlow;
 
-public class test
+public class AnotherTest
 {
     
 }
